@@ -1062,7 +1062,13 @@ a{color:inherit}
       body: new FormData(form),
       headers: { "Accept": "application/json" }
     })
-    .then(function(res){ return res.json(); })
+    .then(function(res){
+      var ct = res.headers.get("content-type") || "";
+      if(ct.indexOf("application/json") === -1){
+        throw new Error("activation-required");
+      }
+      return res.json();
+    })
     .then(function(json){
       if(json && String(json.success) === "true"){
         toast("Request sent! We'll reply within one business day. Thank you, " + (name.split(" ")[0] || "friend") + "!");
@@ -1071,8 +1077,12 @@ a{color:inherit}
         throw new Error("form service rejected the submission");
       }
     })
-    .catch(function(){
-      toast("Sorry — we couldn't send your request. Please email QS@WAHSHEN.COM directly.");
+    .catch(function(err){
+      if(err && err.message === "activation-required"){
+        toast("Almost there — FormSubmit needs activation. Check QS@WAHSHEN.COM inbox (and spam) for the 'Activate Form' email, click the link, then submit again.");
+      } else {
+        toast("Sorry — we couldn't send your request. Please email QS@WAHSHEN.COM directly.");
+      }
     })
     .then(function(){
       btn.disabled = false;
