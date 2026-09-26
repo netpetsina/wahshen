@@ -718,7 +718,7 @@ a{color:inherit}
       <div class="section-head">
         <span class="section-eyebrow">What customers say</span>
         <h2 class="section-title">Quiet roofs, happy owners.</h2>
-        <p class="section-lead">Illustrative quotes from typical projects (demo content).</p>
+        <p class="section-lead">Illustrative quotes from typical projects.</p>
       </div>
       <div class="tst-grid">
         <div class="tst">
@@ -871,7 +871,6 @@ a{color:inherit}
             <textarea id="fMsg" name="message" placeholder="Roof type, monthly bill, questions..."></textarea>
           </div>
           <button class="btn btn-primary" type="submit">Request my free estimate</button>
-          <p class="note">Demo site — no real data is collected or sent. SUNLION ENERGY GROUP is a fictional brand.</p>
         </form>
       </div>
     </div>
@@ -918,7 +917,6 @@ a{color:inherit}
     </div>
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> SUNLION ENERGY GROUP Pte Ltd. All rights reserved.</span>
-      <span>Demo website — fictional brand. Figures cited from public sources; projects and quotes are illustrative.</span>
     </div>
   </div>
 </footer>
@@ -1033,12 +1031,15 @@ a{color:inherit}
     });
   }
 
-  /* ---------- contact form (demo) ---------- */
+  /* ---------- contact form ---------- */
   var form = document.getElementById("quoteForm");
   form.addEventListener("submit", function(ev){
     ev.preventDefault();
     var name = form.elements.name.value.trim();
     var email = form.elements.email.value.trim();
+    var phone = form.elements.phone.value.trim();
+    var property = form.elements.property.value;
+    var message = form.elements.message.value.trim();
     if(!name || !email){
       toast("Please fill in your name and email so we can reply.");
       return;
@@ -1048,7 +1049,19 @@ a{color:inherit}
       toast("That email address doesn't look right — please check it.");
       return;
     }
-    toast("Demo site: your request was received. Thank you, " + (name.split(" ")[0] || "friend") + "!");
+    var lines = [
+      "Name: " + name,
+      "Email: " + email,
+      "Phone / WhatsApp: " + (phone || "—"),
+      "Property type: " + (property || "—"),
+      "",
+      "Message:",
+      (message || "—")
+    ];
+    var subject = "Free estimate request — " + name;
+    var mailto = "mailto:qs@wahshen.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+    window.location.href = mailto;
+    toast("Your email app is opening with your request — just press send. Thank you, " + (name.split(" ")[0] || "friend") + "!");
     form.reset();
   });
 
